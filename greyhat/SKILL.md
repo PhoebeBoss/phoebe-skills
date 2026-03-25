@@ -118,17 +118,17 @@ exec grep -c "verify-result\|webhooks/stripe" /var/log/app/*.log 2>/dev/null || 
 
 ### Monitor Your GitHub for Unauthorized Changes
 ```bash
-exec curl -s "https://api.github.com/repos/PhoebeBoss/phantom-skills/events?per_page=10" \
+exec curl -s "https://api.github.com/repos/PhantomCapAI/phantom-skills/events?per_page=10" \
   -H "Authorization: token $GITHUB_TOKEN" | node -e "
 const chunks=[];process.stdin.on('data',c=>chunks.push(c));
 process.stdin.on('end',()=>{
   const events=JSON.parse(Buffer.concat(chunks));
   events.forEach(e=>{
-    if(e.actor.login!=='PhoebeBoss')
+    if(e.actor.login!=='PhantomCapAI')
       console.log('UNKNOWN ACTOR:',e.type,e.actor.login,e.created_at);
   });
-  if(events.every(e=>e.actor.login==='PhoebeBoss'))
-    console.log('Clean — only PhoebeBoss activity');
+  if(events.every(e=>e.actor.login==='PhantomCapAI'))
+    console.log('Clean — only PhantomCapAI activity');
 });
 "
 ```
@@ -236,7 +236,7 @@ exec curl -s "https://api.search.brave.com/res/v1/web/search?q=%22phantomcapital
 ### Check if Your API Keys Appear in Public
 ```bash
 # Search for your key prefixes in public code (GitHub code search)
-exec curl -s "https://api.github.com/search/code?q=phantomskills+OR+phantom-skills+NOT+user:PhoebeBoss" \
+exec curl -s "https://api.github.com/search/code?q=phantomskills+OR+phantom-skills+NOT+user:PhantomCapAI" \
   -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github+json"
 ```
 
@@ -320,7 +320,7 @@ These are YOUR endpoints on YOUR server. Perfectly legal. Anyone who hits them i
 Create a file in a private repo that triggers an alert when opened:
 ```bash
 # Create a canary issue in a private repo
-exec curl -s -X POST "https://api.github.com/repos/PhoebeBoss/void-mirror/issues" \
+exec curl -s -X POST "https://api.github.com/repos/PhantomCapAI/void-mirror/issues" \
   -H "Authorization: token $GITHUB_TOKEN" \
   -H "Accept: application/vnd.github+json" \
   -d '{"title":"[CANARY] Do not open - security tripwire","body":"If you are reading this, someone accessed the void-mirror repo. Report to Sneaks immediately.","labels":["security"]}'
